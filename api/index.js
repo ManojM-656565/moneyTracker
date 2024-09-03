@@ -27,6 +27,37 @@ app.get('/api/transactions',async (req,res)=>{
     const transactions =await Transaction.find();
     res.json(transactions);
 })
+app.delete('/api/transaction/:id', async (req, res) => {
+    await mongoose.connect(process.env.MONGO_URL);
+    const { id } = req.params;
+    const result = await Transaction.findByIdAndDelete(id);
+    if (result) {
+        res.json({ message: 'Transaction deleted successfully' });
+    } else {
+        res.status(404).json({ message: 'Transaction not found' });
+    }
+});
 
+app.put('/api/transaction/:id', async (req, res) => {
+    await mongoose.connect(process.env.MONGO_URL);
+    const { id } = req.params;
+    const updates = req.body;
+    const transaction = await Transaction.findByIdAndUpdate(id, updates, { new: true });
+    if (transaction) {
+        res.json(transaction);
+    } else {
+        res.status(404).json({ message: 'Transaction not found' });
+    }
+});app.put('/api/transaction/:id', async (req, res) => {
+    await mongoose.connect(process.env.MONGO_URL);
+    const { id } = req.params;
+    const updates = req.body;
+    const transaction = await Transaction.findByIdAndUpdate(id, updates, { new: true });
+    if (transaction) {
+        res.json(transaction);
+    } else {
+        res.status(404).json({ message: 'Transaction not found' });
+    }
+});
 
 app.listen(4000);
